@@ -11,8 +11,9 @@
     ],
     "require": {
         "php": ">=5.4.0",
+        "illuminate/remote": ">=4.2.5,<5",
         "illuminate/support": "4.*",
-        "illuminate/remote": ">=4.2.5,<5"
+        "valorin/l4-down-safe": "1.*"
     },
     "autoload": {
         "psr-4": {
