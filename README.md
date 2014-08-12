@@ -11,7 +11,7 @@ Installation
 Add the package to your application with composer:
 
 ```
-composer require "valorin/deploy:1.*"
+composer require "valorin/deploy:~1.0"
 ```
 
 Add the `DeployServiceProvider` service provider to the `providers` list in `./app/config/app.php`:
