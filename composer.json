@@ -1,7 +1,6 @@
 {
     "name": "valorin/deploy",
-    "description": "Deploy is a simple Artisan command to help with deploying a project to both a staging area (for testing), and a production area (when it's ready) without needing to stuff around with SSH/FTP or custom set ups.
-",
+    "description": "Deploy is a simple Artisan command to help with deploying a project to both a staging area (for testing), and a production area (when it's ready) without needing to stuff around with SSH/FTP or custom set ups.",
     "license": "MIT",
     "keywords": ["laravel", "remote", "deploy"],
     "authors": [
