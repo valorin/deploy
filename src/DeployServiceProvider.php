@@ -30,6 +30,11 @@ class DeployServiceProvider extends ServiceProvider {
      */
     public function register()
     {
+        // Register required Service Providers
+        $this->app->register('Valorin\CronSync\ServiceProvider');
+        $this->app->register('Valorin\L4DownSafe\L4DownSafeServiceProvider');
+
+        // Register commands
         $this->registerCommands();
     }
 
@@ -40,19 +45,10 @@ class DeployServiceProvider extends ServiceProvider {
      */
     protected function registerCommands()
     {
-
-        $app = $this->app;
-
         // register the down:safe command
-        $this->app['command.deploy'] = $this->app->share(function ($app) {
+        $this->app['command.deploy'] = $this->app->share(function () {
             return new Deploy();
         });
         $this->commands('command.deploy');
-
-        // register the down:safe command
-        $this->app['command.down.safe'] = $this->app->share(function ($app) {
-            return new DownSafe();
-        });
-        $this->commands('command.down.safe');
     }
 }

@@ -15,7 +15,7 @@ return array(
      * Special Production Settings
      */
     'production' => array(
-        
+
         /**
          * Enable checking of valid release tag on production or not.
          * Useful shortcut when you require a properly tagged production version, to ensure you don't forget,
@@ -41,6 +41,7 @@ return array(
         'git pull -f origin master',
         'composer install --no-dev',
         'php artisan migrate',
+        'php artisan cronsync',
         'php artisan cache:clear',
         'php artisan up',
     ),

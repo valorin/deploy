@@ -11,7 +11,9 @@
     ],
     "require": {
         "php": ">=5.4.0",
+        "illuminate/support": "~4.2",
         "illuminate/remote": ">=4.2.5,<5",
+        "valorin/cronsync": "~1.0",
         "valorin/l4-down-safe": "~1.1"
     },
     "autoload": {
