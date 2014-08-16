@@ -5,6 +5,13 @@ Deploy is a simple Artisan command to help with deploying a project to both a st
 
 It relies on the remote hosts configured in `app/config/remote.php`, and integrates into Artisan so deploying code is as easy as: `./artisan deploy`.
 
+Deploy is configured to use two of my helper packages by default:
+
+- [CronSync](https://github.com/valorin/cronsync)
+- [L4 Down Safe](https://github.com/valorin/l4-down-safe)
+
+*Note: I have Deploy is tailored to my standard use, you will most likely have to change the remote command list to suit your own needs.*
+
 Installation
 ------------
 
@@ -51,6 +58,7 @@ Deploy will, by default, do the following:
   1. `git pull -f origin master`
   1. `composer install --no-dev`
   1. `php artisan migrate`
+  1. `php artisan cronsync`
   1. `php artisan cache:clear`
   1. `php artisan up`
 
@@ -73,5 +81,7 @@ And then edit the configuration file at:
 
 Version History
 ---------------
+
+`v2.0.0` -- Added [CronSync](https://github.com/valorin/cronsync) command into remote commands list. **WARNING: Will break existing cronjobs.**
 
 `v1.0.0` -- Initial Release
