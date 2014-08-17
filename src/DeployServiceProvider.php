@@ -30,8 +30,7 @@ class DeployServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        // Register required Service Providers
-        $this->app->register('Valorin\CronSync\ServiceProvider');
+        // Register required L4DownSafe Service Provider
         $this->app->register('Valorin\L4DownSafe\L4DownSafeServiceProvider');
 
         // Register commands

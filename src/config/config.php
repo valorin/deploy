@@ -40,9 +40,6 @@ return array(
         'git fetch origin --tags',
         'git pull -f origin master',
         'composer install --no-dev',
-        'php artisan migrate',
-        'php artisan cronsync',
-        'php artisan cache:clear',
         'php artisan up',
     ),
 );
