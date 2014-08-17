@@ -74,8 +74,6 @@ And then edit the configuration file at:
 Version History
 ---------------
 
-`v2.1.0` -- Removed dependency on CronSync, with the custom tasks to be performed in the `composer install` in the application, or via custom modification of the config.
-
-`v2.0.0` -- Added [CronSync](https://github.com/valorin/cronsync) command into remote commands list. **WARNING: Will break existing cronjobs.**
+`v1.1.0` -- Removed custom tasks, which should be performed in the `composer install` in the application, or via custom modification of the config.
 
 `v1.0.0` -- Initial Release
