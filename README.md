@@ -125,6 +125,7 @@ Version History
 - **v1.2.0**
     - Implemented option tags to make commands more flexible.
     - Added key names to each default command to make extending easier.*
+    - Cleaned up the next version prompt with a new selector.
 - **v1.1.0**
     - Cleaned up the default config so it's friendlier for new users.
 - **v1.0.0**

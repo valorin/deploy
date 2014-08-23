@@ -184,6 +184,7 @@ class Deploy extends Command
     protected function incrementTag($current, $major, $minor, $patch, $preRelease, $preIncrement)
     {
         // Current version
+        $this->line('');
         $this->info("The current release version is: {$current}.");
 
         // Simple options
@@ -208,17 +209,8 @@ class Deploy extends Command
 
         // If release not specified, ask the user
         if (!$release) {
-            $extra = ($preRelease ? "-{$preRelease}".($preIncrement > 1 ? '.'.$preIncrement : '') : '');
-            $this->info("The following release types are available:");
-            $this->comment(" * Major:    {$tag['major']}");
-            $this->comment(" * Minor:    {$tag['minor']}");
-            $this->comment(" * Patch:    {$tag['patch']}");
-            $this->comment(" * RC Major: {$tag['rcmajor']}");
-            $this->comment(" * RC Minor: {$tag['rcminor']}");
-            if (isset($tag['rc'])) {
-                $this->comment(" * RC:       {$tag['rc']}");
-            }
-            $release = $this->ask("Which would you like? [".implode('|', array_keys($tag))."] ");
+            $this->line('');
+            $release = array_search($this->choice("Please select the next release version:", $tag), $tag);
         }
 
         // Check valid release
