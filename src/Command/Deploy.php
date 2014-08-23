@@ -235,6 +235,7 @@ class Deploy extends Command
 
         // Define commands
         $commands = array_merge(['cd '.$directory], Config::get('vdeploy::config.commands'));
+        $commands = array_filter($commands);
 
         // Parse tags in command
         if (!$this->parseTags($commands)) {
