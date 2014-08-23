@@ -34,12 +34,12 @@ return array(
      *  ./app/config/remote.php.
      */
     'commands' => array(
-        'php artisan down:safe',
-        'git checkout -f master',
-        'git fetch origin',
-        'git fetch origin --tags',
-        'git pull -f origin master',
-        'composer install --no-dev',
-        'php artisan up',
+        'down'     => 'php artisan down:safe',
+        'checkout' => 'git checkout -f {branch|master}',
+        'fetch'    => 'git fetch {remote|origin}',
+        'tags'     => 'git fetch {remote|origin} --tags',
+        'pull'     => 'git pull -f {remote|origin} {branch|master}',
+        'composer' => 'composer install {composer-args|--no-dev}',
+        'up'       => 'php artisan up',
     ),
 );

@@ -3,10 +3,18 @@
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\SSH;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class Deploy extends Command
 {
+    /**
+     * @var string
+     */
+    const TAG_PREFIX = 'set-';
+    const REGEX_TAG = '/(\{\s*([^|} ]+)(?:\s*[|]\s*([^|} ]+))?\s*\})/i';
+
     /**
      * The console command name.
      *
@@ -22,18 +30,20 @@ class Deploy extends Command
     protected $description = 'Interactive application deploy helper.';
 
     /**
+     * @var array
+     */
+    protected $tags    = [];
+    protected $options = [];
+
+    /**
      * Execute the console command.
      *
      * @return mixed
      */
     public function fire()
     {
-        // Load Remote name
-        $remote = $this->argument('remote');
-        $directory = Config::get('remote.connections.'.$remote.'.root');
-
         // Run production scripts
-        if (!$this->production($remote)) {
+        if (!$this->production()) {
             return 1;
         }
 
@@ -42,13 +52,35 @@ class Deploy extends Command
             return 1;
         }
 
-        // Define commands
-        $commands = array_merge(['cd '.$directory], Config::get('vdeploy::config.commands'));
+        // Run commands
+        if (!$this->runCommands()) {
+            return 1;
+        }
+    }
 
-        // Run Commands
-        SSH::into($remote)->run($commands);
+    /**
+     * Override Illuminate\Console\Command to dynamic inject the user-specified --set-* options in the configuration.
+     *
+     * @return void
+     */
+    protected function specifyParameters()
+    {
+        // Identify our options
+        foreach ($_SERVER['argv'] as $argument) {
 
-        $this->info('All done!');
+            if (!Str::startsWith($argument, '--'.self::TAG_PREFIX)) {
+                continue;
+            }
+
+            // Strip past the '='
+            $argument = substr($argument, 0, strpos($argument, '='));
+
+            // Add as option, if prefix matches
+            $this->tags[]    = substr($argument, strlen(self::TAG_PREFIX));
+            $this->options[] = [$argument, null, InputOption::VALUE_REQUIRED];
+        }
+
+        return parent::specifyParameters();
     }
 
     /**
@@ -81,10 +113,9 @@ class Deploy extends Command
     /**
      * Runs the production code, if requested
      *
-     * @param  string  $remote
      * @return boolean
      */
-    protected function production($remote)
+    protected function production()
     {
         // Check if push is enabled
         if (!Config::get('vdeploy::config.production.enabled')) {
@@ -92,6 +123,7 @@ class Deploy extends Command
         }
 
         // Check for production
+        $remote = $this->argument('remote');
         if ($remote != Config::get('vdeploy::config.production.name')) {
             return true;
         }
@@ -199,6 +231,90 @@ class Deploy extends Command
     }
 
     /**
+     * Runs the SSH commands on the remote
+     *
+     * @return boolean
+     */
+    protected function runCommands()
+    {
+        // Load Remote directory
+        $remote    = $this->argument('remote');
+        $directory = Config::get('remote.connections.'.$remote.'.root');
+
+        // Define commands
+        $commands = array_merge(['cd '.$directory], Config::get('vdeploy::config.commands'));
+
+        // Parse tags in command
+        if (!$this->parseTags($commands)) {
+            return false;
+        }
+
+        // Run Commands
+        SSH::into($remote)->run($commands);
+
+        return true;
+    }
+
+    /**
+     * Parses the user tags in the commands array
+     *
+     * @param  string|string[] $command
+     * @return boolean
+     */
+    protected function parseTags(&$command)
+    {
+        // Recurse?
+        if (is_array($command)) {
+            foreach ($command as &$cmd) {
+                if (!$this->parseTags($cmd)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Look for tags
+        while (preg_match(self::REGEX_TAG, $command, $matches)) {
+
+            // Attempt to load tag
+            try {
+                $value = $this->userOption($matches[2]);
+
+            // if tag doesn't exist
+            } catch (\InvalidArgumentException $exception) {
+
+                // Default value provided?
+                if (isset($matches[3])) {
+                    $value = $matches[3];
+
+                } else {
+                    // Else, throw error
+                    $this->error("ERROR: You need to specifiy the --".self::TAG_PREFIX.$matches[2]." argument!");
+                    return false;
+                }
+            }
+
+            // Replace
+            $command = str_replace($matches[0], $value, $command);
+        }
+
+        return true;
+    }
+
+    /**
+     * Translates user option into final option value
+     *
+     * @param  string $option
+     * @param  string $default
+     * @return string
+     */
+    protected function userOption($option, $default = null)
+    {
+        return $this->option(self::TAG_PREFIX.$option, $default);
+    }
+
+    /**
      * Get the console command arguments.
      *
      * @return array
@@ -212,5 +328,15 @@ class Deploy extends Command
             array('remote', InputArgument::OPTIONAL, $description, $default),
             array('release', InputArgument::OPTIONAL, "Release type, to increment the tag by."),
         );
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return $this->options;
     }
 }
