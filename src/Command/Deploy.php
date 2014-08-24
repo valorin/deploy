@@ -13,7 +13,7 @@ class Deploy extends Command
      * @var string
      */
     const TAG_PREFIX = 'set-';
-    const REGEX_TAG = '/(\{\s*([^|} ]+)(?:\s*[|]\s*([^|} ]+))?\s*\})/i';
+    const REGEX_TAG = '/(\{\s*([^|} ]+)(?:\s*[|]\s*([^|} ]*))?\s*\})/i';
 
     /**
      * The console command name.
