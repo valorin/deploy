@@ -52,13 +52,14 @@ return array(
      */
     'commands' => array(
 
-        'down'     => 'php artisan down:safe',
+        'down'     => 'php artisan down',
         'checkout' => 'git checkout -f {branch|master}',
         'fetch'    => 'git fetch {remote|origin}',
         'tags'     => 'git fetch {remote|origin} --tags',
         'pull'     => 'git pull -f {remote|origin} {branch|master}',
         'composer' => 'composer install {composer-args|--no-dev}',
         'up'       => 'php artisan up',
+        'queue'    => 'php artisan queue:restart',
 
     ),
 );

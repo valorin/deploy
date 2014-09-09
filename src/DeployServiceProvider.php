@@ -1,7 +1,6 @@
 <?php namespace Valorin\Deploy;
 
 use Illuminate\Support\ServiceProvider;
-use Valorin\L4DownSafe\Command\DownSafe;
 use Valorin\Deploy\Command\Deploy;
 
 class DeployServiceProvider extends ServiceProvider {
@@ -30,9 +29,6 @@ class DeployServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        // Register required L4DownSafe Service Provider
-        $this->app->register('Valorin\L4DownSafe\L4DownSafeServiceProvider');
-
         // Register commands
         $this->registerCommands();
     }
@@ -44,7 +40,6 @@ class DeployServiceProvider extends ServiceProvider {
      */
     protected function registerCommands()
     {
-        // register the down:safe command
         $this->app['command.deploy'] = $this->app->share(function () {
             return new Deploy();
         });

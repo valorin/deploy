@@ -9,9 +9,6 @@ production, to ensure all production releases are tagged appropriately.
 It uses the remote hosts configured in `app/config/remote.php`, and integrates into your application as an Artisan
 command, so deploying code is as easy as: `./artisan deploy`.
 
-Deploy is also configured to use [L4 Down Safe](https://github.com/valorin/l4-down-safe) to block new jobs in the queue
-while maintenance is being performed, to prevent unsafe database/script conditions from breaking jobs.
-
 **As of v1.2**, it includes the ability to specify custom tags which can be replaced
 when the command is being executed, to allow you to specify a command like this:
 
@@ -69,13 +66,14 @@ After a successful push, it will connect to the remote server and run the predef
 
 ```
 'commands' => array(
-    'down'     => 'php artisan down:safe',
+    'down'     => 'php artisan down',
     'checkout' => 'git checkout -f {branch|master}',
     'fetch'    => 'git fetch {remote|origin}',
     'tags'     => 'git fetch {remote|origin} --tags',
     'pull'     => 'git pull -f {remote|origin} {branch|master}',
     'composer' => 'composer install {composer-args|--no-dev}',
     'up'       => 'php artisan up',
+    'queue'    => 'php artisan queue:restart',
 )
 ```
 
@@ -122,6 +120,8 @@ Deploy as much as you require.
 Version History
 ---------------
 
+- **v1.2.1**
+    - Removed DownSafe command, due to [merged bugfix](https://github.com/laravel/framework/pull/5565) in Laravel.
 - **v1.2.0**
     - Implemented option tags to make commands more flexible.
     - Added key names to each default command to make extending easier.*
