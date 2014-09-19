@@ -29,6 +29,9 @@ class DeployServiceProvider extends ServiceProvider {
      */
     public function register()
     {
+        // Register Remote Service Provider
+        $this->app->register('Illuminate\Remote\RemoteServiceProvider');
+        
         // Register commands
         $this->registerCommands();
     }
