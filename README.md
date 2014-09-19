@@ -120,6 +120,8 @@ Deploy as much as you require.
 Version History
 ---------------
 
+- **v1.3.0**
+    - Supporting Laravel 5 and the removal of Remote/SSH from the Laravel core framework.
 - **v1.2.1**
     - Removed DownSafe command, due to [merged bugfix](https://github.com/laravel/framework/pull/5565) in Laravel.
 - **v1.2.0**
